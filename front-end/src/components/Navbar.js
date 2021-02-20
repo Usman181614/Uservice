@@ -35,7 +35,8 @@ const Navbar = () =>{
             [
                 <li><a href="/discover" data-after="Discover" id="discover">Discover</a></li>,
                 <li><Link to="/contact">Contact Us</Link></li>,
-                <li><Link to ="/profile">{state?state.userName:"Loading.."}</Link></li>,
+                <li><Link to ="/myprofile">{state?state.userName:"Loading.."}</Link></li>,
+                <li><Link to ="/myprojects">My Projects</Link></li>,
                 <li onClick={handleLogout}><Link to>Logout</Link></li>
     
 

@@ -42,8 +42,8 @@ router.post('/publishproject',(requireLogin),(req,res)=>{
 router.post('/discoverprojects',requireLogin,(req,res)=>{
     console.log("discoverProjectApi: ",req.body)
     const {user} = req.body
-    let SQL = `SELECT * FROM projects WHERE projectId IN (SELECT projectId FROM project_skills as p, user_skills as u WHERE p.skills= u.skills AND u.userName = ?)`
-    db.query(SQL,user,(err,projects)=>{
+    let SQL = `SELECT * FROM projects WHERE (projectId IN (SELECT projectId FROM project_skills as p, user_skills as u WHERE p.skills= u.skills AND u.userName = ?)) AND author != ?`
+    db.query(SQL,[user,user],(err,projects)=>{
         if(err)
             throw err
         else
@@ -53,9 +53,20 @@ router.post('/discoverprojects',requireLogin,(req,res)=>{
         }
     })
     
+})
 
-    
-    
+router.get('/myprojects',(requireLogin),(req,res)=>{
+    console.log("myProjectsApi",req.user.userName)
+    const {userName} = req.user
+
+    let SQL = "SELECT * FROM projects WHERE author = ?"
+    db.query(SQL,userName,(err,projects)=>{
+        if(err)
+            throw err
+        console.log(projects)
+        res.json({projects})
+    })
+
     
 })
 
@@ -68,6 +79,32 @@ router.post('/getproject',(req,res)=>{
         const project = result
         res.json({project})
     })
+})
+
+router.post('/applyonproject',(requireLogin),(req,res)=>{
+
+    const projectId = req.body.id
+    const {userName} = req.user
+
+    console.log("ApplyonprojectApi", projectId,userName)
+
+    let SQL1 = `SELECT id FROM applicants WHERE project= ? AND applicant =?`
+    db.query(SQL1,[projectId,userName],(err,result)=>{
+        if(err)
+            throw err
+        if(!(result.length))
+        {
+            let SQL2 = `INSERT INTO applicants (project,applicant) VALUES (?,?)`
+            db.query(SQL2,[projectId,userName],(err,result)=>{
+                if(err)
+                    throw err
+                console.log(result)      
+            })
+        }
+    })
+
+    
+    
 })
 
 module.exports.router= router

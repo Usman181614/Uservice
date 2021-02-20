@@ -12,6 +12,9 @@ import CreateProject from './components/Project/CreateProject'
 import Discover from './components/Discover'
 import Contact from './components/Contact'
 import Project from './components/Project/Project'
+import MyProjects from './components/Project/MyProjects'
+import MyProject from './components/Project/MyProject'
+
 
 import {reducer,initialState} from './reducers/userReducer'
 
@@ -77,6 +80,14 @@ function App() {
 
       <Route exact path="/createproject" >
         <CreateProject />
+      </Route>
+
+      <Route path="/myprojects">
+        <MyProjects/>
+      </Route>
+
+      <Route exact path="/myproject/:id">
+        <MyProject/>
       </Route>
 
       <Route exact path="/project/:id" >
