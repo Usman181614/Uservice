@@ -17,8 +17,10 @@ router.post('/publishproject',(requireLogin),(req,res)=>{
     const project = req.body
     project.author = req.user.userName
 
-    let SQL1 = `INSERT INTO projects (title, projectDescription, projectThumbnail, author) VALUES (?, ?, ?, ?) `
-    db.query(SQL1,[project.title,project.projectDescription,project.projectThumbnail,project.author],(error,result)=>{
+    let d = new Date();
+
+    let SQL1 = `INSERT INTO projects (title, projectDescription, projectThumbnail, author,date_published) VALUES (?, ?, ?, ?,?) `
+    db.query(SQL1,[project.title,project.projectDescription,project.projectThumbnail,project.author,d],(error,result)=>{
       if(error)
             throw error
         else
@@ -37,6 +39,23 @@ router.post('/publishproject',(requireLogin),(req,res)=>{
         }
     })
 
+})
+
+router.post('/hasapplied',(req,res)=>{
+    console.log("hasAppliedApi: ",req.body)
+    
+    let SQL = "SELECT * FROM applicants WHERE (project = ? AND applicant = ?)"
+    db.query(SQL,[req.body.id,req.body.userName],(err,result)=>{
+        if(err)
+            throw err
+        if(result[0])
+        {
+            res.json({bool:true})
+        }
+        else{
+            res.json({bool:false})
+        }
+    })
 })
 
 router.post('/discoverprojects',requireLogin,(req,res)=>{
@@ -105,6 +124,18 @@ router.post('/applyonproject',(requireLogin),(req,res)=>{
 
     
     
+})
+
+router.post('/getapplicants',(req,res)=>{
+    console.log('getApplicantsApi',req.body);
+    id = req.body.id;
+    console.log(id)
+    let SQL = 'SELECT * FROM Users WHERE Users.userName IN (SELECT applicant FROM applicants INNER JOIN projects WHERE applicants.project = ?)'
+    db.query(SQL,id,(err,result)=>{
+        if(err)
+            throw err
+        console.log("Result: ",result)
+    })
 })
 
 module.exports.router= router

@@ -1,17 +1,20 @@
-import {useEffect,useState} from 'react'
+import {useEffect,useState,useContext} from 'react'
 import ProfilePic from '../../styles/images/profile.svg'
 import Navbar from '../Navbar'
 import Pic1 from '../../styles/images/2.jpg'
 import {useParams} from 'react-router-dom'
 import {Link} from 'react-router-dom'
+import {UserContext} from '../../App'
+
 
 
 function Project() {
 
-	
+	const {state,dispatch} = useContext(UserContext)
 
 	const [projectInfo, setprojectInfo] = useState({})
 	const [projectReview,setProjectReview] = useState(['Great Project'])
+	const [bool,setBool] = useState(false)
 	const {id} = useParams();
 
 	const addReview = (e)=>{
@@ -20,9 +23,7 @@ function Project() {
 		console.log("Add Review")
     }
 
-	const hasApplied = ()=>{
-		return false
-	}
+	
     
     const apply = ()=>{
         console.log("apply")
@@ -64,6 +65,8 @@ function Project() {
 	useEffect(() => {
 		console.log("ProjectInfo: ",projectInfo)
 	}, [projectReview])
+
+	
 
     return (
         <div>
@@ -109,7 +112,7 @@ function Project() {
 					<div class="project-img">
 						<img class="project-img" src={projectInfo.project?projectInfo.project[0].projectThumbnail:"Loading.."} alt="" width="400px" style={{height: "100%"}} />
 					</div>
-                    <button onClick={apply} >{hasApplied()?"applied":"apply"}</button>
+                    <button onClick={apply} >{bool?"applied":"apply"}</button>
 					<div class="project-ratings" style={{margin: "20px  0px", display: "flex", flexDirection: "row", justifyContent: "flex-end", alignItems: "flex-end"}}>
 						<span class="ratings" style={{fontSize: ".8rem", color: "gray", fontWeight: "500"}}>
 							<i class="fa fa-star" style={{color: "#7e27cf", fontSize: "1rem",  marginRight: "2px"}}></i>

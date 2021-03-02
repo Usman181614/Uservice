@@ -25,6 +25,21 @@ function MyProject() {
         console.log("apply")
     }
 
+	const getApplicants = ()=>{
+		fetch('/getapplicants',{
+			method:'POST',
+			headers:{
+                "Authorization": "Bearer "+localStorage.getItem("jwt"),
+                "Content-Type":"application/json"
+			},
+			body:JSON.stringify({
+				id:id
+			})
+
+		})
+		
+	}
+
 	useEffect(() => {
 		fetch('/getproject',{
 			method:"post",
@@ -41,6 +56,8 @@ function MyProject() {
 			console.log("Project: ",project)
 			setprojectInfo(project)
 		})
+
+		getApplicants()
 	}, [])
 
 	useEffect(() => {
@@ -86,8 +103,7 @@ function MyProject() {
 				
 			</div>
 			<div class="project-date" style={{position: "relative", padding: "2px 2px"}}>
-				<span class="day">Sunday &nbsp;</span>
-				<span class="date"> Oct 21, 2020</span>
+				<span class="date">{projectInfo.project?projectInfo.project[0].date_published:"Date not available"} </span>
 			</div>
 
 			<div class="project-post">
